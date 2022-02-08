@@ -17,6 +17,6 @@ function getData(url, callback) {
   xhr.open("GET", url);
   xhr.send();
 }
-function selector(selector){
+function selector(selector) {
   return document.querySelector(selector)
 }
