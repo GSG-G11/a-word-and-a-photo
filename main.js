@@ -1,42 +1,58 @@
-const photoContainer = selector('.photo-container');
-const textContainer = selector('.text-container');
-const searchInput = selector('#search-input');
-const searchBtn = selector('.search-btn');
+const photoContainer = selector(".photo-container");
+const textContainer = selector(".text-container");
+const searchInput = selector("#search-input");
+const searchBtn = selector(".search-btn");
 
-searchBtn.addEventListener('click', () => search(searchInput.value.trim()));
+searchBtn.addEventListener("click", () => search(searchInput.value.trim()));
 
 let timer;
 
 function search(str) {
-    alert(str)
-    searchForPhoto(str)
+  searchForPhoto(str);
+  searchForWord(str);
 }
 
 function searchForPhoto(str) {
-    const url = `https://api.unsplash.com/search/photos?client_id=adFB5v3yr2sVh10Opi7MNM31JEXTzgszYwirmf9S8lY&query=${str}`;
-    getData(url, handlePhotoResponse)
-    function handlePhotoResponse(response) {
-        clearInterval(timer);
-        photoContainer.innerHTML = "";
-        const imgsArr = [];
-        let i = 0;
-        const resultsArr = response.results;
-        resultsArr.forEach(photoObj => {
-            const img = document.createElement('img');
-            img.classList.add('word-photo');
-            img.src = photoObj.urls.small;
-            imgsArr.push(img);
-        })
+  const url = `https://api.unsplash.com/search/photos?client_id=adFB5v3yr2sVh10Opi7MNM31JEXTzgszYwirmf9S8lY&query=${str}`;
+  getData(url, handlePhotoResponse);
+  function handlePhotoResponse(response) {
+    clearInterval(timer);
+    photoContainer.innerHTML = "";
+    const imgsArr = [];
+    let i = 0;
+    const resultsArr = response.results;
+    resultsArr.forEach((photoObj) => {
+      const img = document.createElement("img");
+      img.classList.add("word-photo");
+      img.src = photoObj.urls.small;
+      imgsArr.push(img);
+    });
+    photoContainer.appendChild(imgsArr[i]);
+    timer = setInterval(() => {
+      photoContainer.innerHTML = "";
+      if (imgsArr[i + 1]) {
+        photoContainer.appendChild(imgsArr[i + 1]);
+      } else {
+        i = 0;
         photoContainer.appendChild(imgsArr[i]);
-        timer = setInterval(() => {
-            photoContainer.innerHTML = "";
-            if (imgsArr[i + 1]) {
-                photoContainer.appendChild(imgsArr[i + 1]);
-            } else {
-                i = 0;
-                photoContainer.appendChild(imgsArr[i]);
-            }
-            i++;
-        }, 3000)
-    }
+      }
+      i++;
+    }, 3000);
+  }
+}
+
+function searchForWord(str) {
+  const url = `https://api.dictionaryapi.dev/api/v2/entries/en/${str}`;
+  getData(url, handleWordResponse);
+  function handleWordResponse(response) {
+    textContainer.innerHTML = "";
+    const mean = response[0].meanings[0].definitions;
+    const resultDefinition = mean.forEach((ele) => {
+      const word = document.createElement("div");
+      word.classList.add("word-definition");
+      const content = document.createTextNode(ele.definition);
+      word.appendChild(content);
+      textContainer.appendChild(word);
+    });
+  }
 }
