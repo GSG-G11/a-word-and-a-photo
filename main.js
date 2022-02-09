@@ -47,12 +47,19 @@ function searchForWord(str) {
   function handleWordResponse(response) {
     textContainer.innerHTML = "";
     const mean = response[0].meanings[0].definitions;
-    const resultDefinition = mean.forEach((ele) => {
-      const word = document.createElement("div");
-      word.classList.add("word-definition");
-      const content = document.createTextNode(ele.definition);
-      word.appendChild(content);
-      textContainer.appendChild(word);
-    });
+    let list = "";
+
+    mean.forEach(
+      (def) => (list += `<li class="content-li">${def.definition}</li>`)
+    );
+    textContainer.innerHTML = `            
+    <div class="card">
+      <h3 class="title">${response[0].word} (${response[0].meanings[0].partOfSpeech})</h3>
+      <div class="definisions">
+              <ul class="content-list">
+                 ${list}
+              </ul>
+      </div>
+  </div>`;
   }
 }
