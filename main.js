@@ -17,6 +17,7 @@ function searchForPhoto(str) {
   getData(url, handlePhotoResponse);
   function handlePhotoResponse(response) {
     const resultsArr = response.results;
+    clearInterval(timer);
     photoContainer.innerHTML = "";
     if(resultsArr.length===0){
       const img = document.createElement("img");
@@ -26,7 +27,6 @@ function searchForPhoto(str) {
       photoContainer.appendChild(img);
       return
     }
-    clearInterval(timer);
     const imgsArr = [];
     let i = 0;
     resultsArr.forEach((photoObj) => {
@@ -51,12 +51,11 @@ function searchForPhoto(str) {
 
 function searchForWord(str) {
   const url = `https://api.dictionaryapi.dev/api/v2/entries/en/${str}`;
-  getData(url, handleWordResponse);
+  getData(url, handleWordResponse,handleError);
   function handleWordResponse(response) {
     textContainer.innerHTML = "";
     const mean = response[0].meanings[0].definitions;
-    let list = "";
-
+     let list = "";
     mean.forEach(
       (def) => (list += `<li class="content-li">${def.definition}</li>`)
     );
@@ -69,5 +68,12 @@ function searchForWord(str) {
               </ul>
       </div>
   </div>`;
+  }
+  function handleError(errorName){
+    textContainer.innerHTML = `            
+    <div class="card">
+    <h1>Searched Word Not In Our Dictionary</h1>  
+    </div>
+  </div>`
   }
 }
