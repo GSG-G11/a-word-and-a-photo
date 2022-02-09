@@ -4,8 +4,12 @@ function getData(url, callback) {
     if (xhr.readyState == 4) {
       switch (xhr.status) {
         case 200:
-          const response = JSON.parse(xhr.responseText);
-          callback(response);
+          try{
+            const response = JSON.parse(xhr.responseText);
+            callback(response);
+          }catch(e){
+            console.log(e);
+          }
           break;
         case 404:
           break;
