@@ -16,11 +16,19 @@ function searchForPhoto(str) {
   const url = `https://api.unsplash.com/search/photos?client_id=adFB5v3yr2sVh10Opi7MNM31JEXTzgszYwirmf9S8lY&query=${str}`;
   getData(url, handlePhotoResponse);
   function handlePhotoResponse(response) {
-    clearInterval(timer);
+    const resultsArr = response.results;
     photoContainer.innerHTML = "";
+    if(resultsArr.length===0){
+      const img = document.createElement("img");
+      img.classList.add("word-photo");
+      img.src = './no-image.jpg';
+      img.width="400"
+      photoContainer.appendChild(img);
+      return
+    }
+    clearInterval(timer);
     const imgsArr = [];
     let i = 0;
-    const resultsArr = response.results;
     resultsArr.forEach((photoObj) => {
       const img = document.createElement("img");
       img.classList.add("word-photo");
